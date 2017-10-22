@@ -1,0 +1,55 @@
+(*由已扫描字符确定相应音符*)
+note[b_, x0_, t_, v_] := Module[{a = b},
+   Which[x0 == "1",
+    AppendTo[a, SoundNote[0, t, SoundVolume -> v]],
+    x0 == "2", AppendTo[a, SoundNote[2, t, SoundVolume -> v]],
+    x0 == "3", AppendTo[a, SoundNote[4, t, SoundVolume -> v]],
+    x0 == "4", AppendTo[a, SoundNote[5, t, SoundVolume -> v]],
+    x0 == "5", AppendTo[a, SoundNote[7, t, SoundVolume -> v]],
+    x0 == "6", AppendTo[a, SoundNote[9, t, SoundVolume -> v]],
+    x0 == "7", AppendTo[a, SoundNote[11, t, SoundVolume -> v]],
+    x0 == "0", AppendTo[a, SoundNote[None, t, SoundVolume -> v]],
+    x0 == "-", a[[-1, 2]] += t,
+    x0 == "_", a[[-1, 2]] /= 2,
+    x0 == "*", a[[-1, 2]] *= 1.5,
+    x0 == "t", a[[-1, 2]] /= 3,
+    x0 == "%", a[[-1, 2]] /= 5,
+    x0 == ".", a[[-1, 1]] -= 12,
+    x0 == "'", a[[-1, 1]] += 12,
+    x0 == "#", a[[-1, 1]] += 1,
+    x0 == "b", a[[-1, 1]] -= 1]; a];
+(*谱序列中单个字符的扫描*)
+mf[yueqi_, t_, x_] := 
+  Module[{lh = StringLength[x], xx = x, a = {}, v = 1, par = False, 
+    h = {}, i, x0},
+   For[i = 1, i <= lh, i++, x0 = StringTake[xx, 1];
+           
+    If[par, If[x0 == ")", 
+      AppendTo[a, SoundNote[h, t, SoundVolume -> v]]; par = False, 
+      h = noteh[h, x0]],
+          
+     If[x0 == "(", par = True, 
+      v = Which[x0 == "p", 0.5, x0 == "P", 0.2, x0 == "m", 0.8, 
+        x0 == "f", 1, True, v]; a = note[a, x0, t, v]]];
+                        xx = StringDrop[xx, 1]];
+   Sound[Prepend[a, yueqi], {0, Plus @@ (#[[2]] & /@ a)}]];
+控制音高的符号：1、2、3、4、5、6、7分别表示长度为一个单位的C、D、E、F、G、A、B。
+                     .表示前一个音符降低八度。
+                     '表示前一个音符升高八度。
+                     b表示前一个音符降低半度
+                      #表示前一个音符升高半度。
+     当一个音符后同时带上#（或b）和'(或.)时，需将#（或b）放在'(或.)前面。同一个音符后不能带多个#、b。
+控制音长的符号：
+                     -表示前一个音符长度增长一个单位。
+                     _表示前一个音符长度减半。
+                     *表示前一个音符长度变为原来的1.5倍。
+                     t表示前一个音符长度变为原来的三分之一。
+                     %表示前一个音符长度变为原来的五分之一。
+控制音强的符号：p表示此后的音强变为0.5（默认音强为1）。
+                     P表示此后的音强变为0.2。
+                     m表示此后的音强变为0.8。
+                     f表示此后的音强变为1。
+其他符号：0表时长一个单位的休止符（休止符的长度可通过在0后添加控制音长的符号来控制）。
+|表示小节线，只是为了阅读方便，可以不写。"("表示进入和声状态,")"表示退出和声状态。和声的实现：用括号()\
+将几个音符括在其中。括号内有效的字符只有1、2、3、4、5、6、7、0、b、#、'、.这些控制音高的符号。控制音长的符号-、_、*、t、%\
+请添加在括号后面。此外，还可以写成多个声部，然后用Sound[{ , ,}]连接起来。*)
