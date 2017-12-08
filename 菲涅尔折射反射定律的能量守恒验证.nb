@@ -1,0 +1,20 @@
+(*反射光S分量与入射光S分量之比*)
+rs = Abs[Sin[ArcSin[1.5 Sin[i]] - i]/Sin[i + ArcSin[1.5 Sin[i]]]];
+(*反射光P分量与入射光P分量之比*)
+rp = Abs[Tan[i - ArcSin[1.5 Sin[i]]]/Tan[i + ArcSin[1.5 Sin[i]]]];
+(*折射光S分量与入射光S分量之比*)
+ts = Abs[2 1.5 Cos[i] Sin[i]/Sin[i + ArcSin[1.5 Sin[i]]]];
+(*折射光P分量与入射光P分量之比*)
+tp = Abs[2 1.5 Cos[
+     i] Sin[i]/(Sin[i + ArcSin[1.5 Sin[i]]]*
+       Cos[i - ArcSin[1.5 Sin[i]]])];
+(*画图语句*)
+Plot[{(rs^2 + rp^2)/2, 
+  Cos[Abs[ArcSin[1.5 Sin[i]]]] (ts^2 + tp^2)/(3 Cos[i])}, {i, 0, 
+  Pi/2}, AxesOrigin -> {0, 0}, AspectRatio -> 1/2.4, 
+ PlotRange -> {0, 1}, 
+ Ticks -> {{0, 29 Pi/125, Pi/2}, {1, 2, 3, 5, 7, 9}}, 
+ ImageSize -> {1000, 500}, TicksStyle -> Directive[Black, 40], 
+ PlotLegends -> 
+  Placed[{Style["R", Plain, 60], Style["T", Plain, 60]}, {.3, .75}], 
+ PlotStyle -> {Dashed, Thick, Dashing[.04], Dashing[.02]}]
