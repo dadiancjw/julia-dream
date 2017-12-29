@@ -1,0 +1,8 @@
+(*高斯消去法*)
+mat = Input["Input a matrix="];
+n = Input["输入已输入矩阵的阶数n="];
+For[a = 2, a <= n, a++, 
+  For[i = a, i <= n, i++, 
+   For[j = n, j >= a - 1, j--, 
+    mat[[i, j]] =mat[[i, j]] -mat[[a - 1, j]]*mat[[i, a - 1]]/mat[[a - 1, a - 1]]]]];
+mat
