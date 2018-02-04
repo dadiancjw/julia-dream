@@ -1,0 +1,20 @@
+simplInterpretL[lstring_String, delta_: N[Pi/3], func_: Line, 
+  initDirection_: 0] := 
+ Module[{pos = {0., 0.}, ang = initDirection, l}, 
+  l = Prepend[
+    DeleteCases[
+     Switch[#, "+", ang += delta;, "-", ang -= delta;, "F", 
+        pos += {Cos[ang], Sin[ang]}, _, Null] & /@ 
+      Characters[lstring], Null], {0., 0.}]; Graphics[func[l]]]
+GraphicsGrid[
+ Partition[
+  simplInterpretL /@ 
+   SubstitutionSystem["F" -> "F+F--F+F", "F--F--F", 5], 3], 
+ ImageSize -> Full]
+ 
+ 解释：
+ simplInterpretL对字符串l的解释函数
+ lstring_String指定变量lstring为字符变量
+ func_: Line指定变量func为mma函数Line
+ initDirection初始方向
+ SubstitutionSystem为mma内置迭代替代函数
