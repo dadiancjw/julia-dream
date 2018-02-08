@@ -10,3 +10,4 @@ For[i = 1, i <= n, i++,
      ImageSize -> {10, 10}, Background -> color]]];
 GraphicsGrid[mat2, ImageSize -> {800, 800}, Spacings -> 0]
 (*因为没有实际的传感器数据，故此段程序首先产生了一个n阶矩阵。然后将矩阵中各元素的数值转化为对应颜色的小正方形，再将各正方形无缝拼贴成图像*)
+![彩图](https://github.com/dadiancjw/julia-dream/blob/master/p.jpg)
