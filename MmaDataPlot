@@ -1,0 +1,16 @@
+ydata = Input[
+   "请先输入纵坐标(形式为：{data_1,data_2,...,data_i,...data_n}，要注意全为英文字符):"];
+xdata = Input[
+   "输入横坐标数据(形式为：{data_1,data_2,...,data_i,...data_n})，无横坐标数据时只输入一个0:"];
+If[xdata == 0, xdata = Range[Length[ydata]]];
+data = Table[{xdata[[i]], ydata[[i]]}, {i, 1, Length[ydata]}];
+channel = Input["请选模式(1:数据点图;2:数据点+拟合图;3:数据点+插值图;4:数据点+折线直连图)"];
+text_String = Input["请选择是否绘出数据点坐标(no/yes):"];
+Show[ListPlot[data], 
+ Which[channel == 1, ListPlot[data], channel == 2, 
+  Plot[Fit[data, Input["输入拟合基元函数，形式为{func_1,...,func_i,...,func_n}"], 
+    x], {x, Min[xdata], Max[xdata]}, PlotRange -> All], channel == 3, 
+  f = Interpolation[data]; 
+  Plot[f[x], {x, Min[xdata], Max[xdata]}, PlotRange -> All], 
+  channel == 4, ListLinePlot[data]], 
+ If[text == "no", Null, Style, Text], ImageSize -> {1000, 600}]
